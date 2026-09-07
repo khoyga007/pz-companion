@@ -3,6 +3,21 @@
 Human-readable history of notable PZ Companion changes. Git remains authoritative for exact diffs; this file summarizes behavior, architecture, diagnostics, testing, and repository-framework changes by development version.
 
 ## [Unreleased]
+### Fork fixes — 2026-09-07
+- Fix summon failure at Companion.lua:40 on B42.20.4: iterate the indexed Lua
+  snapshot instead of calling get(i) on the live Set, and keep writes on that Set.
+- Add a regression check covering immutable snapshots, actor registration and duplicate reuse.
+- Replace the companion body with IsoPlayer plus setNpc(true): B42 keeps IsoSurvivor
+  as a character-creation avatar only, so it overrides no getVisual() and builds no
+  BodyDamage, throwing in ModelManager.Add and in the cell update loop.
+- Tag the actor with CelineCompanionActor and skip the summoning player when reusing,
+  because the companion and every real player now share the IsoPlayer class.
+- Stop registering the companion in getSurvivorList(), which is typed for IsoSurvivor.
+- Call setMovingSquareNow() after setCurrent(): setCurrent only assigns the field,
+  while rendering walks the square's moving object list, so the companion spawned,
+  spoke and updated while being drawn nowhere.
+- Extend the regression check to the NPC flag, the actor tag, square registration
+  and player-adoption refusal.
 ### Fork 0.1.0 prototype — 2026-09-07
 - Add opt-in DeepSeek runtime, local bounded conversation memory, request deduplication,
   session API budget, and strict model-output validation.

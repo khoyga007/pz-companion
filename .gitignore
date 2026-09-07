@@ -29,6 +29,7 @@ Thumbs.db
 # Private runtime configuration and conversation memory
 *.local.json
 *.local.cmd
+*.local.ps1
 .env*
 *.sqlite*
 playtest/

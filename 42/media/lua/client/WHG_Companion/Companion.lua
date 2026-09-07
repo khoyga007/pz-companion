@@ -35,10 +35,14 @@ end
 function Companion.spawn(player)
     local id = Companion.identity(player)
     -- Reuse any loaded actor belonging to this player before creating one.
-    local objects = getCell():getObjectList()
+    -- B42 stores actors in a Set; its Lua snapshot supports indexed access.
+    local objects = getCell():getObjectListForLua()
     for i = 0, objects:size() - 1 do
         local object = objects:get(i)
-        if instanceof(object, "IsoSurvivor") and object:getModData().CelineCompanionId == id then
+        -- The companion is an IsoPlayer, so every real player passes the class
+        -- test; the actor tag and the identity guard are what single her out.
+        if object ~= player and instanceof(object, "IsoPlayer")
+            and object:getModData().CelineCompanionActor == id then
             Companion.npc = object
             Companion.apply("WAIT")
             return true
@@ -60,13 +64,25 @@ function Companion.spawn(player)
     descriptor:setForename("Celine")
     descriptor:setSurname("")
     descriptor:setFemale(true)
-    local npc = IsoSurvivor.new(descriptor, getCell(), square:getX(), square:getY(), square:getZ())
+    -- B42 keeps IsoSurvivor only as the character-creation avatar: it never
+    -- overrides getVisual() and its constructor builds no BodyDamage, so both
+    -- ModelManager.Add and the cell update loop throw on a world instance.
+    -- IsoPlayer is the only human body the engine can still draw.
+    -- Argument order differs from IsoSurvivor: the cell comes first.
+    local npc = IsoPlayer.new(getCell(), descriptor, square:getX(), square:getY(), square:getZ())
     Companion.npc = npc -- Retain the reference even if subsequent setup fails.
-    npc:getModData().CelineCompanionId = id
+    npc:setNpc(true) -- Attaches the engine AIComponent; keeps her off player input.
+    npc:getModData().CelineCompanionActor = id
     npc:setCurrent(square)
-    if not objects:contains(npc) then objects:add(npc) end
-    local survivors = getCell():getSurvivorList()
-    if not survivors:contains(npc) then survivors:add(npc) end
+    -- setCurrent only assigns the field. Rendering walks the square's moving
+    -- object list, and setMovingSquareNow() is what puts her on it; without it
+    -- she exists, speaks and updates, but is drawn nowhere.
+    npc:setMovingSquareNow()
+    -- The snapshot is immutable: register in the live Set, not the snapshot.
+    local liveObjects = getCell():getObjectList()
+    if not liveObjects:contains(npc) then liveObjects:add(npc) end
+    -- getSurvivorList() is typed ArrayList<IsoSurvivor>; an IsoPlayer stored
+    -- there breaks any consumer that casts, and nothing reads it, so skip it.
     npc:dressInRandomNonSillyOutfit()
     npc:setSceneCulled(false)
     Companion.apply("WAIT")
