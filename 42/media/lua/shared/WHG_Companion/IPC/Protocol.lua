@@ -97,13 +97,13 @@ function Protocol.validateResponse(response, expectedRequestId)
     if response.status ~= "ok" and response.status ~= "error" then
         return false, "response status must be 'ok' or 'error'"
     end
-    if type(response.speech) ~= "string" then
+    if type(response.speech) ~= "string" or #response.speech > 4096 then
         return false, "response speech must be a string"
     end
     if type(response.intent) ~= "string" or not Protocol.ALLOWED_INTENTS[response.intent] then
         return false, "response intent is not allowlisted"
     end
-    if type(response.confidence) ~= "number" or response.confidence < 0 or response.confidence > 1 then
+    if type(response.confidence) ~= "number" or response.confidence ~= response.confidence or response.confidence < 0 or response.confidence > 1 then
         return false, "response confidence must be between 0 and 1"
     end
     if type(response.parameters) ~= "table" then

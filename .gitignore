@@ -25,3 +25,10 @@ __pycache__/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Private runtime configuration and conversation memory
+*.local.json
+*.local.cmd
+.env*
+*.sqlite*
+playtest/

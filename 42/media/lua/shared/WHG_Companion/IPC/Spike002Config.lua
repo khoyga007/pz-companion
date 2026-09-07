@@ -8,7 +8,7 @@
 -- mechanism and we intentionally stage the server test.
 
 local Config = {
-    clientHarnessEnabled = true,
+    clientHarnessEnabled = false,
     serverHarnessEnabled = false,
     targetSuccessfulRequests = 20,
     requestTimeoutMs = 10000,

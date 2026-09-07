@@ -1,4 +1,26 @@
-# PZ Companion for Project Zomboid B42
+# Celine Companion — DeepSeek prototype
+
+Personal fork of [jonathanjacobs/pz-companion](https://github.com/jonathanjacobs/pz-companion),
+maintained in `khoyga007/pz-companion`. Version **0.1.0 experimental**, mod ID `pz-companion-deepseek`.
+
+**Verified:** two real DeepSeek requests through Lua file transport, including Vietnamese
+FOLLOW/WAIT intent interpretation and remembering a base name across turns.
+**Not verified in Project Zomboid:** NPC spawn/rendering, pathfinding, saving/loading,
+and the in-game dialog. This is a development prototype, not a stable playable release.
+
+- DeepSeek V4 Flash, non-thinking mode, 320 maximum output tokens per request.
+- Manual chat only; six recent exchanges retained per companion in local SQLite.
+- At most 100 API calls per runtime session; no automatic retries or autonomous conversations.
+- Model output is restricted to speech and FOLLOW/WAIT/NONE; Lua owns game actions.
+- Experimental native IsoSurvivor actor, context menu and stock PZ text dialog.
+- No copied NPC implementation/assets or game binary patches.
+
+This fork **deliberately changes the upstream offline-only requirement**: chat goes to
+the official DeepSeek API. Earlier architecture documents below describe upstream v0.0.2;
+[the fork guide](docs/DEEPSEEK_PROTOTYPE.md) is authoritative for this version.
+Do not enable this fork together with the upstream mod (shared Lua namespaces).
+
+## Upstream documentation (historical v0.0.2)
 
 PZ Companion is a Project Zomboid Build 42 mod project exploring persistent human NPC companions with natural-language conversation, player-directed tasking, autonomous survival behavior, and deterministic combat/support logic.
 

@@ -3,6 +3,17 @@
 Human-readable history of notable PZ Companion changes. Git remains authoritative for exact diffs; this file summarizes behavior, architecture, diagnostics, testing, and repository-framework changes by development version.
 
 ## [Unreleased]
+### Fork 0.1.0 prototype — 2026-09-07
+- Add opt-in DeepSeek runtime, local bounded conversation memory, request deduplication,
+  session API budget, and strict model-output validation.
+- Add experimental native single-player companion and stock PZ chat/context-menu integration.
+- Disable the automatic upstream request harness; reject late replies and oversized IPC content.
+- Give the fork its own mod ID, preserving upstream copyright and license notices.
+- Validation: nine new Python tests, seven upstream tests, Lua command/protocol checks,
+  Lua syntax parsing, and two live DeepSeek round trips passed.
+- In-game rendering, movement, UI and save lifecycle remain unverified; separate test save required.
+
+### Historical upstream plan
 
 ### Planned
 - Run the v0.0.2 deterministic Spike 002 round-trip test inside a solo Build 42.20.2 game if/when the sidecar route remains necessary.

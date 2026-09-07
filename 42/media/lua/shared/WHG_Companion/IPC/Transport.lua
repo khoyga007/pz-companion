@@ -142,6 +142,7 @@ local function readTextFile(path)
 
     local reader = nil
     local lines = {}
+    local totalBytes = 0
     local ok, err = pcall(function()
         reader = getFileReader(path, false)
         if reader == nil then
@@ -154,6 +155,8 @@ local function readTextFile(path)
             if line == nil then
                 break
             end
+            totalBytes = totalBytes + #tostring(line)
+            if totalBytes > 65536 then error("IPC file too large") end
             table.insert(lines, tostring(line))
         end
 
@@ -237,6 +240,11 @@ function Transport.poll(requestId)
     end
 
     local _, _, responsePath = requestPaths(requestId)
+    if nowMs() >= pending.deadlineEpochMs then
+        if pathExists(responsePath) then acknowledgeResponse(requestId) end
+        pendingRequests[requestId] = nil
+        return "timeout", "sidecar response timeout"
+    end
     if not pathExists(responsePath) then
         if nowMs() >= pending.deadlineEpochMs then
             pendingRequests[requestId] = nil

@@ -1,6 +1,6 @@
-id=pz-companion
-name=PZ Companion
-description=Persistent companion NPC framework with local conversational AI integration experiments and deterministic game-action authority for Project Zomboid Build 42.
-author=Jonathan Jacobs
+id=pz-companion-deepseek
+name=Celine Companion - DeepSeek Prototype
+description=Experimental single-player DeepSeek chat and native survivor companion. Requires external Python runtime. Test on a separate save; NPC movement is not yet game-verified.
+author=Jonathan Jacobs; khoyga007 fork
 pzversion=42
-modversion=0.0.2
+modversion=0.1.0
